@@ -50,7 +50,8 @@ def showCredits():
 
         select = input("Ação: ").strip()
         if select == "1":
-            return  # volta ao menu principal
+            start()  # volta ao menu principal
+            break
         else:
             print("Opção inválida. Tente novamente.")
 
@@ -60,7 +61,7 @@ def customizeCharacter():
         print("1 - Alterar nome")
         print("2 - Voltar")
 
-        select = input("Ação: ")
+        select = input("Ação: ").strip()
         if select == "1":
             if jogador["nivel"] < 5:
                 print("Você precisa ser nível 5 para alterar o nome do personagem.")
@@ -70,6 +71,8 @@ def customizeCharacter():
                     jogador["nome"] = nome
                     saveGame()
                     print(f"Nome alterado para {nome}!")
+                    start()  # volta o principal
+                    break
                 else:
                     print("Nome inválido. Tente novamente.")
         elif select == "2":
@@ -83,7 +86,7 @@ def endGame():
     print("Fim de jogo! Obrigado por jogar.")
     exit()
 
-def startGame():
+def start():
     loadGame()
     checkFirstTime()
     while True:
@@ -92,17 +95,21 @@ def startGame():
         print("3 - Créditos")
         print("4 - Fechar")
 
-        select = input("Ação: ")
+        select = input("Ação: ").strip()
         if select == "1":
             startRound()
+            break
         elif select == "2":
             customizeCharacter()
+            break
         elif select == "3":
             showCredits()
+            break
         elif select == "4":
             endGame()
+            break
         else:
             print("Opção inválida. Tente novamente.")
 
 # Início do jogo
-startGame()
+start()
