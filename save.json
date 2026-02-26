@@ -1,6 +1,13 @@
 {
-    "nome": "DiggoZ",
-    "nivel": 10,
-    "hp": 100,
-    "ouro": 0
+    "jogador": {
+        "nome": "Diggo",
+        "nivel": 1,
+        "hp": 50,
+        "ouro": 0
+    },
+    "inimigo": {
+        "nome": "Goblin",
+        "nivel": 2,
+        "hp": 10
+    }
 }

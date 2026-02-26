@@ -1,17 +1,29 @@
 import json
 import os
 
-primeira_vez = True  # flag para controlar se é a primeira vez
+primeira_vez = True
+jogador = None
+inimigo = None
 
 def saveGame():
-    with open("save.json","w") as f:
-        json.dump(jogador,f,indent=4)
+    dados = {
+        "jogador": jogador,
+        "inimigo": inimigo
+    }
+    with open("save.json", "w") as f:
+        json.dump(dados, f, indent=4)
 
 def loadGame():
-    global jogador
+    global jogador, inimigo
     if os.path.exists("save.json"):
-        with open("save.json","r") as f:
-            jogador = json.load(f)
+        with open("save.json", "r") as f:
+            dados = json.load(f)
+        jogador = dados["jogador"]
+        inimigo = dados["inimigo"]
+    else:
+        # valores padrão caso não exista save.json
+        jogador = {"nome": "Player", "nivel": 1, "hp": 50, "ouro": 0}
+        inimigo = {"nome": "Goblin", "nivel": 2, "hp": 10}
 
 def deleteSave():
     if os.path.exists("save.json"):
@@ -20,49 +32,48 @@ def deleteSave():
     else:
         print("Nenhum salvamento encontrado.")
 
-def checkFirstTime(): #verifica se é a primeira vez que o jogador está jogando
+def checkFirstTime():
     global primeira_vez
     if primeira_vez:
-        print("Bem-vindo ao jogo!")  # primeira vez
+        print("Bem-vindo ao jogo!")
         primeira_vez = False
     else:
-        print("Bem-vindo de volta!")  # nas próximas vezes
+        print("Bem-vindo de volta!")
 
+def showCredits():
+    while True:
+        print("Créditos do Jogo:")
+        print("Desenvolvedor: DiggoSants")
+        print("Versão: 1.0")
+        print("Obrigado por jogar!")
+        print("1 - voltar")
 
-def showCredits(): #mostra os créditos do jogo
-    print("Créditos do Jogo:")
-    print("Desenvolvedor: DiggoSants")
-    print("Versão: 1.0")
-    print("Obrigado por jogar!")
-    print("1 - voltar")
-
-    select = input("Ação: ")
-    if select == "1":
-        startGame()
-    else:
-        print("Opção inválida. Tente novamente.")
-        showCredits()
+        select = input("Ação: ").strip()
+        if select == "1":
+            return  # volta ao menu principal
+        else:
+            print("Opção inválida. Tente novamente.")
 
 def customizeCharacter():
-    print("Customizando seu personagem...")
-    print("1 - Alterar nome")
-    print("2 - Voltar")
+    while True:
+        print("Customizando seu personagem...")
+        print("1 - Alterar nome")
+        print("2 - Voltar")
 
-    select = input("Ação: ")
-    if select == "1":
-        if jogador["nivel"] < 5:
-            print("Você precisa ser nível 5 para alterar o nome do personagem.")
-            customizeCharacter()
-        else:
-            nome = input("Digite o novo nome do personagem: ")
-            jogador["nome"] = nome
-            saveGame()
-            print(f"Nome alterado para {nome}!")
-            startGame()
-
-    elif select == "2":
-        print("Voltando...")
-        startGame()
+        select = input("Ação: ")
+        if select == "1":
+            if jogador["nivel"] < 5:
+                print("Você precisa ser nível 5 para alterar o nome do personagem.")
+            else:
+                nome = input("Digite o novo nome do personagem: ").strip()
+                if nome:
+                    jogador["nome"] = nome
+                    saveGame()
+                    print(f"Nome alterado para {nome}!")
+                else:
+                    print("Nome inválido. Tente novamente.")
+        elif select == "2":
+            return  # volta ao menu principal
 
 def startRound():
     print("Iniciando nova rodada...")
@@ -71,13 +82,11 @@ def startRound():
 def endGame():
     print("Fim de jogo! Obrigado por jogar.")
     exit()
-    
 
 def startGame():
-    loadGame()  # Carrega o jogo salvo, se existir
-    checkFirstTime() #verifica se é a primeira vez
+    loadGame()
+    checkFirstTime()
     while True:
-
         print("1 - Começar")
         print("2 - Customizar")
         print("3 - Créditos")
@@ -87,13 +96,10 @@ def startGame():
         if select == "1":
             startRound()
         elif select == "2":
-            print("Carregando...")
             customizeCharacter()
         elif select == "3":
-            print("Carregando...")
             showCredits()
         elif select == "4":
-            print("Carregando...")
             endGame()
         else:
             print("Opção inválida. Tente novamente.")
